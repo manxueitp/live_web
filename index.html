@@ -1,0 +1,52 @@
+<html>
+	<head>
+	    <meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Hello World</title>
+		<!-- Custom Font - Change 'Muli' to the font you want -->
+		<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<!-- Custom CSS inside CSS folder -->
+		<link rel="stylesheet" href="css/style.css">
+
+		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="main.js"></script>
+		<script type="text/javascript">
+		
+			var socket = io.connect('http://104.131.68.226:8080/index.html');
+			
+			socket.on('connect', function() {
+				console.log("Connected");
+			});
+
+			// Receive from any event
+			socket.on('chatmessage', function (data) {
+				console.log(data);
+				document.getElementById('messages').innerHTML = "" + data + 
+ + "" + document.getElementById('messages').innerHTML;
+			});
+			
+			var sendmessage = function(message) {
+				console.log("chatmessage: " + message);
+				socket.emit('chatmessage', message);
+			};
+
+	
+		</script>	
+	</head>
+ <body>
+   <div id="play">
+        <div id="tangmu">
+             
+        </div>
+    </div>
+	<div id="messages">
+	   No Messages Yet
+	</div>
+    <input type="text" id="message" name="message">
+    <input type="submit" value="submit" id="submit" onclick="sendmessage(document.getElementById('message').value);">
+ </body>
+</html>
+		

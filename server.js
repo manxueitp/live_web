@@ -1,8 +1,8 @@
+// HTTP Portion
 var http = require('http');
 var fs = require('fs'); // Using the filesystem module
 var httpServer = http.createServer(requestHandler);
 httpServer.listen(8080);
-console.log("Port_Opened_at_8080");
 
 function requestHandler(req, res) {
 	// Read index.html
@@ -50,5 +50,3 @@ io.sockets.on('connection',
 	}
 );
 		
-
-

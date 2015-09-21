@@ -1,52 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-	<head>
-	    <meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Hello World</title>
-		<!-- Custom Font - Change 'Muli' to the font you want -->
-		<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-		<!-- Custom CSS inside CSS folder -->
-		<link rel="stylesheet" href="css/style.css">
+ <head>
+  <title>Bullet Curtain!</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+            var si;
+            var socket = io.connect('http://104.131.68.226:8080/');
+            
+            socket.on('connect', function() {
+                console.log("Connected");
+            });
 
-		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
-		<script type="text/javascript" src="main.js"></script>
-		<script type="text/javascript">
-		
-			var socket = io.connect('http://104.131.68.226:8080/index.html');
-			
-			socket.on('connect', function() {
-				console.log("Connected");
-			});
-
-			// Receive from any event
-			socket.on('chatmessage', function (data) {
-				console.log(data);
-				document.getElementById('messages').innerHTML = "" + data + 
- + "" + document.getElementById('messages').innerHTML;
-			});
-			
-			var sendmessage = function(message) {
-				console.log("chatmessage: " + message);
-				socket.emit('chatmessage', message);
-			};
-
-	
-		</script>	
-	</head>
- <body>
-   <div id="play">
-        <div id="tangmu">
+            // Receive from any event
+            socket.on('chatmessage', function (data) {
+                console.log(data);
+                tangmu(data);
+            });
+            
+            var sendmessage = function(message) {
+                console.log("chatmessage: " + message);
+                socket.emit('chatmessage', message);
+            };
+            
+            function tangmu(text){
+                clearInterval(si);
+                //var text = document.getElementById("message");
+                var tangmu = document.getElementById("tangmu");
+                var tangmu2=document.createElement("div");
+                var textStyle="<font id=\"textStyle\">"+text+"</font>";
+                tangmu2.appendChild(textStyle);
+     
+                
+                mathHeight = Math.round(Math.random()*tangmu.offsetHeight)+"px";
+     
+                var textLeft=tangmu.offsetWidth+"px";
+                 
+                tangmu.appendChild(tangmu2);
+                 
+                var textStyleObj = document.getElementById("textStyle");
+                 
+                textStyleObj.style.left=textLeft;
+                textStyleObj.style.top=mathHeight;
+                 
+                var x=parseInt(textStyleObj.style.left);
+                 
+                si = setInterval("xunhuan("+x+")",100);
              
-        </div>
+            }
+            function xunhuan(left){
+                var textStyleObj = document.getElementById("textStyle");
+                textStyleObj.style.left=left;
+                 
+                var x=parseInt(textStyleObj.style.left);
+     
+                if(x<textStyleObj.style.width){
+                    document.getElementById("tangmu").innerHTML="";
+                    clearInterval(si);
+                }else{
+                    x-=18;
+                }
+                 
+                textStyleObj.style.left=x+"px";
+            }
+    
+        </script>   
+    </head>
+    <style>
+        .wrap{
+            margin:20px auto;
+            padding-left: 320px;
+        }
+        #play{
+            position: relative;
+            width:640px;
+            height:480px;
+            background-color:#000;
+        }
+         
+        #tangmu{
+            position: absolute;
+            top: 0;
+            right: 0;
+            width:640px;
+            height:480px;
+            z-index:9999;
+            background-color: rgba(000, 1, 000, 0.1); 
+        }
+         
+        #textStyle{
+            position:absolute;
+            font-size:24px;
+            color:#fff;
+        }
+    </style>
+     
+ </head>
+ 
+ <body>
+   <div class="wrap">
+    <div id="play">
+      <video  id="thevideo1" width="640" height="480" loop="loop" autoplay>
+        <source src="http://104.131.68.226:3001/chat/video/Time%20Square%20A.mp4" type="video/mp4" >
+      </video>
+      <div id="tangmu">
+      </div>
     </div>
-	<div id="messages">
-	   No Messages Yet
-	</div>
-    <input type="text" id="message" name="message">
-    <input type="submit" value="submit" id="submit" onclick="sendmessage(document.getElementById('message').value);">
+     
+    <input type="text" id="message" name="message" value="Your comments..."/>
+    <input type="submit" value="submit"  onclick="sendmessage(document.getElementById('message').value);"/>
+     
+  </div>   
  </body>
 </html>
-		
